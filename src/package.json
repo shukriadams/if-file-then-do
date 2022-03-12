@@ -1,0 +1,31 @@
+{
+    "name": "if-file-then-do",
+    "version": "0.0.1",
+    "license": "MIT",
+    "description": "test",
+    "devDependencies": {},
+    "bin": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "break": "node --inspect-brk=0.0.0.0:8081 index",
+        "debug": "node --inspect=0.0.0.0:8081 index"
+    },
+    "dependencies": {
+        "fs-extra": "10.0.1",
+        "js-yaml": "4.1.0",
+        "minimist": "1.2.5",
+        "jsonfile": "6.1.0",
+        "express": "4.17.3",
+        "madscience-node-exec": "https://github.com/shukriadams/node-exec.git#0.0.7"
+    },
+    "pkg": {
+        "assets": [
+            "./package.json",
+            "./node_modules/fs-extra/**",
+            "./node_modules/js-yaml/**",
+            "./node_modules/minimist/**",
+            "./node_modules/express/**",
+            "./node_modules/madscience-node-exec/**"
+        ]
+    }
+}
