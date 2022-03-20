@@ -3,8 +3,8 @@ const settings = require('./settings'),
 
 module.exports = {
     async start(){
-        for(const watch of settings.watch){
-            new Watcher(watch.name, watch.path, watch.do, watch.type)
+        for(const watch of settings.watch.filter(watch => watch.valid)){
+            new Watcher(watch.name, watch.glob, watch.command, watch.on)
             console.log(`started watcher ${watch.name}`)
         }
     }

@@ -10,6 +10,7 @@ module.exports = class Watcher {
         this.command = command
         this.name = name
         this.watcher = chokidar.watch(glob, options)
+        
         if (typeof events === 'string')
             events = [events]
 
