@@ -1,3 +1,4 @@
 vagrant/hyperv/.vagrant
 src/node_modules
 src/.env
+src/config.yml

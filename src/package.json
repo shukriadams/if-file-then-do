@@ -16,6 +16,7 @@
         "minimist": "1.2.5",
         "jsonfile": "6.1.0",
         "express": "4.17.3",
+        "chokidar": "3.5.3",
         "madscience-node-exec": "https://github.com/shukriadams/node-exec.git#0.0.7"
     },
     "pkg": {
@@ -25,6 +26,7 @@
             "./node_modules/js-yaml/**",
             "./node_modules/minimist/**",
             "./node_modules/express/**",
+            "./node_modules/chokidar/**",
             "./node_modules/madscience-node-exec/**"
         ]
     }
