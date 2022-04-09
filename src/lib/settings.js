@@ -27,13 +27,13 @@ for (const watch of settings.watch){
     // force name to path if name not set
     if (!watch.name){
         if (watch.path)
-            watch.name = watch.glob
+            watch.name = watch.path
         else
             watch.name = 'unnamed'
     }
 
-    if (!watch.glob){
-        watch.state = '"glob" not set - this must be a valid glob (see https://en.wikipedia.org/wiki/Glob_(programming))'
+    if (!watch.path){
+        watch.state = '"path" not set - this must be a valid glob (see https://en.wikipedia.org/wiki/Glob_(programming))'
         continue
     }
 
