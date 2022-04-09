@@ -1,5 +1,6 @@
 const chokidar = require('chokidar'),
-    exec = require('madscience-node-exec')
+    exec = require('madscience-node-exec'),
+    socket = require('./socket') 
 
 module.exports = class Watcher {
     constructor(name, glob, command, events = [], options = {             
@@ -55,6 +56,7 @@ module.exports = class Watcher {
                 console.log(`${this.name} starting`)
             },
             onEnd : result => {
+                socket.send(this.name)
                 console.log(`${this.name} ended`)
             }
         })        

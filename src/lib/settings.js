@@ -17,6 +17,8 @@ if (fs.existsSync('./config.yml')){
 // assign defaults
 settings = Object.assign({
     port: 3000,
+    host: 'localhost',
+    protocol : 'http',
     cacheViews: true,
     watch : [ ],
 }, settings)

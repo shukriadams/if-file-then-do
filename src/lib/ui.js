@@ -1,7 +1,8 @@
 const http = require('http'),
     Express = require('express'),
     handlebarsLoader = require('madscience-handlebarsLoader'),
-    settings = require('./settings')
+    settings = require('./settings'),
+    socket = require('./socket')
 
 module.exports = {
     start(){
@@ -9,6 +10,8 @@ module.exports = {
         const express = Express()
 
         express.use(Express.static(`${__dirname}/../express/static`))
+
+        
 
         // load views
         handlebarsLoader.initialize({ 
@@ -25,6 +28,8 @@ module.exports = {
         const server = http.createServer(express)
             server.listen(settings.port)
         
+        socket.initialize(server)
+
         console.log(`if-file-then-do started, view at http://localhost:${settings.port}`)
     }
 }

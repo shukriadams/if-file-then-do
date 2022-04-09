@@ -3,38 +3,17 @@ let _io = null
 module.exports = {
 
     initialize(express){
-        const
-            Socketio = require('socket.io'),
-            authTokenLogic = require(_$+'logic/authToken')
-
+        const Socketio = require('socket.io')
         _io = Socketio(express)
         _io.on('connection', function (socket) {
-            socket.on('response.authToken', async function (data) {
-                // validate token
-                let authToken = await authTokenLogic.getById(data.authToken)
-                if (!authToken)
-                    return socket.emit('auth.invalidToken')
-
-                socket.join(data.authToken)
-            });
-
-            socket.on('notify.logout', async function(data){
-                socket.leave(data.authToken)
-            })
-
-            socket.emit('request.authToken')
+            console.log('client connected')
+            socket.join('myclient')
         })
     },
 
-    get(){
-        return _io
-    },
-
-    send(authToken, message, data){
-        if (data)
-            _io.to(authToken).emit(message, data)
-        else
-            _io.to(authToken).emit(message)
+    send(file){
+        console.log('sending' + file)
+        _io.to('myclient').emit('dropbox.connected', { file : file })
     }
 
 }
