@@ -3,7 +3,6 @@
     "version": "0.0.1",
     "license": "MIT",
     "description": "test",
-    "devDependencies": {},
     "bin": "index.js",
     "scripts": {
         "start": "node index.js",
@@ -19,21 +18,28 @@
         "jsonfile": "6.1.0",
         "express": "4.17.3",
         "chokidar": "3.5.3",
+        "madscience-handlebarsloader": "https://github.com/shukriadams/madscience-handlebarsloader.git#0.0.7",
+        "madscience-node-exec": "https://github.com/shukriadams/node-exec.git#0.0.7"
+    },
+    "devDependencies" : {
         "babelify": "10.0.0",
         "@babel/core": "7.2.0",
         "@babel/preset-env": "7.2.0",
-        "browserify": "17.0.0",
-        "madscience-handlebarsloader": "https://github.com/shukriadams/madscience-handlebarsloader.git#0.0.7",
-        "madscience-node-exec": "https://github.com/shukriadams/node-exec.git#0.0.7"
+        "browserify": "17.0.0"
     },
     "pkg": {
         "assets": [
             "./package.json",
+            "./express/views/**",
+            "./express/static/**",
             "./node_modules/fs-extra/**",
             "./node_modules/js-yaml/**",
             "./node_modules/minimist/**",
+            "./node_modules/socket.io/**",
+            "./node_modules/jsonfile/**",
             "./node_modules/express/**",
             "./node_modules/chokidar/**",
+            "./node_modules/madscience-handlebarsloader/**",
             "./node_modules/madscience-node-exec/**"
         ]
     }

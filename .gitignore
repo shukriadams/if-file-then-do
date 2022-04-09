@@ -3,3 +3,5 @@ src/node_modules
 src/.env
 src/config.yml
 src/express/static/js/bundle.js
+build/node_modules
+build/linux64
