@@ -1,9 +1,11 @@
-module.exports = (express)=>{
+const handlebarsLoader = require('madscience-handlebarsLoader')
+
+module.exports = express =>{
 
     /**
      *
     */
-    express.get('/', async function(req, res){
+    express.get('/', async (req, res) => {
         try {
             // display : 
             // watched paths
@@ -12,8 +14,8 @@ module.exports = (express)=>{
             // cpu use
             // log of last 10 detected changes
             // path to logs
-
-            res.send('it works')
+            const view = await handlebarsLoader.getPage('default')
+            res.send(view())
         } catch(ex){
             console.log(ex)
             res.status(500)
