@@ -1,46 +1,76 @@
 {
-    "name": "if-file-then-do",
-    "version": "0.0.1",
-    "license": "MIT",
-    "description": "test",
-    "bin": "index.js",
-    "scripts": {
-        "start": "node index.js",
-        "break": "node --inspect-brk=0.0.0.0:8081 index",
-        "debug": "node --inspect=0.0.0.0:8081 index"
+  "name": "if-file-then-do",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "test",
+  "bin": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "cd build && node build.js",
+    "client": "sh ./build/bundle.sh",
+    "break": "node --inspect-brk=0.0.0.0:3001 index",
+    "debug": "node --inspect=0.0.0.0:3001 index"
+  },
+  "dependencies": {
+    "fs-extra": "10.0.1",
+    "js-yaml": "4.1.0",
+    "minimist": "1.2.5",
+    "socket.io": "2.1.1",
+    "socket.io-client": "2.1.1",
+    "jsonfile": "6.1.0",
+    "express": "4.17.3",
+    "chokidar": "3.5.3",
+    "sanitize-filename": "1.6.3",
+    "madscience-fsUtils": "https://github.com/shukriadams/node-fsUtils.git#0.0.12",
+    "madscience-handlebarsloader": "https://github.com/shukriadams/madscience-handlebarsloader.git#0.0.7",
+    "madscience-node-exec": "https://github.com/shukriadams/node-exec.git#0.0.7"
+  },
+  "devDependencies": {
+    "babelify": "10.0.0",
+    "@babel/core": "7.2.0",
+    "@babel/preset-env": "7.2.0",
+    "browserify": "17.0.0"
+  },
+  "pkg": {
+    "assets": [
+      "./package.json",
+      "./express/views/**",
+      "./express/static/**",
+      "./node_modules/fs-extra/**",
+      "./node_modules/js-yaml/**",
+      "./node_modules/minimist/**",
+      "./node_modules/socket.io/**",
+      "./node_modules/jsonfile/**",
+      "./node_modules/express/**",
+      "./node_modules/chokidar/**",
+      "./node_modules/madscience-handlebarsloader/**",
+      "./node_modules/madscience-node-exec/**"
+    ]
+  },
+  "jspm": {
+    "registry": "npm",
+    "directories": {
+      "baseURL": "react/app",
+      "packages": "react/lib"
     },
     "dependencies": {
-        "fs-extra": "10.0.1",
-        "js-yaml": "4.1.0",
-        "minimist": "1.2.5",
-        "socket.io": "2.1.1",
-        "socket.io-client": "2.1.1",
-        "jsonfile": "6.1.0",
-        "express": "4.17.3",
-        "chokidar": "3.5.3",
-        "madscience-handlebarsloader": "https://github.com/shukriadams/madscience-handlebarsloader.git#0.0.7",
-        "madscience-node-exec": "https://github.com/shukriadams/node-exec.git#0.0.7"
+      "babel": "babel-core@5.8.38",
+      "babel-plugin-transform-react-jsx": "6.24.1",
+      "babel-runtime": "5.8.38",
+      "classnames": "2.2.5",
+      "core-js": "2.6.5",
+      "history": "4.7.2",
+      "localforage": "1.5.6",
+      "react": "16.6.3",
+      "react-dom": "16.6.3",
+      "react-redux": "5.0.6",
+      "react-router-dom": "4.2.2",
+      "react-router-hash-link": "1.2.0",
+      "redux": "3.7.2",
+      "redux-persist": "5.7.0",
+      "redux-watch": "1.1.1",
+      "socket.io-client": "2.1.1"
     },
-    "devDependencies" : {
-        "babelify": "10.0.0",
-        "@babel/core": "7.2.0",
-        "@babel/preset-env": "7.2.0",
-        "browserify": "17.0.0"
-    },
-    "pkg": {
-        "assets": [
-            "./package.json",
-            "./express/views/**",
-            "./express/static/**",
-            "./node_modules/fs-extra/**",
-            "./node_modules/js-yaml/**",
-            "./node_modules/minimist/**",
-            "./node_modules/socket.io/**",
-            "./node_modules/jsonfile/**",
-            "./node_modules/express/**",
-            "./node_modules/chokidar/**",
-            "./node_modules/madscience-handlebarsloader/**",
-            "./node_modules/madscience-node-exec/**"
-        ]
-    }
+    "devDependencies": {}
+  }
 }

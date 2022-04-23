@@ -1,5 +1,7 @@
 let yaml = require('js-yaml'),
+    process = require('process'),
     fs = require('fs-extra'),
+    sanitize = require('sanitize-filename'),
     settings = null
 
 if (fs.existsSync('./config.yml')){
@@ -19,6 +21,7 @@ settings = Object.assign({
     port: 3000,
     host: 'localhost',
     protocol : 'http',
+    dataDirectory : './data',
     cacheViews: true,
     watch : [ ],
 }, settings)
@@ -26,6 +29,7 @@ settings = Object.assign({
 for (const watch of settings.watch){
     watch.valid = false
     watch.state = ''
+    watch.__safename = ''
 
     // force name to path if name not set
     if (!watch.name){
@@ -49,9 +53,16 @@ for (const watch of settings.watch){
     if (!watch.on)
         watch.on = ['add']
 
+    watch.__safename = sanitize(watch.name)
     watch.valid = true
 }
 
+// ensure there are no identical safenames
+for (const watch of settings.watch)
+    if (settings.watch.filter(s => s.__safename === watch.__safename).length > 1){
+        console.log(`FATAL ERROR : Name collision detected for ${watch.name} (transformed to ${watch.__safename}). Please ensure that transformed names are unique by giving your watches unique names`)
+        process.exit(1)
+    }
 
 /**
  * validate watch structure - must have

@@ -1,19 +1,19 @@
-let _io = null
+let io = null
 
 module.exports = {
 
     initialize(express){
         const Socketio = require('socket.io')
-        _io = Socketio(express)
-        _io.on('connection', function (socket) {
+        io = Socketio(express)
+        io.on('connection', socket => {
             console.log('client connected')
             socket.join('myclient')
         })
     },
 
-    send(file){
-        console.log('sending' + file)
-        _io.to('myclient').emit('dropbox.connected', { file : file })
+    send (eventName, data){
+        console.log('sending' + data)
+        io.to('myclient').emit(eventName, data)
     }
 
 }

@@ -1,33 +1,41 @@
 const chokidar = require('chokidar'),
     exec = require('madscience-node-exec'),
+    settings = require('./settings'),
+    fs = require('fs-extra'),
+    path = require('path'),
     socket = require('./socket') 
 
 module.exports = class Watcher {
-    constructor(name, glob, command, events = [], options = {             
+
+    constructor(config, options = {             
         persistent: true,
         usePolling: true,
         ignoreInitial : true
     }){
-        this.command = command
-        this.name = name
-        this.watcher = chokidar.watch(glob, options)
+        this.config = config
+
+        this.dataPath = path.join(settings.dataDirectory, this.config.__safename)
+        fs.ensureDirSync(this.dataPath)
         
+        this.watcher = chokidar.watch(this.config.path, options)
+        let events = this.config.on
+
         if (typeof events === 'string')
             events = [events]
 
         if (events.includes('add'))
-            this.watcher.on('add', async ()=>{
-                await this.handleEvent()
+            this.watcher.on('add', async (filePath, fileinfo)=>{
+                await this.handleEvent(filePath, fileinfo)
             })
 
         if (events.includes('edit'))
-            this.watcher.on('change', async ()=>{
-                await this.handleEvent()
+            this.watcher.on('change', async (filePath, fileinfo)=>{
+                await this.handleEvent(filePath, fileinfo)
             })
 
         if (events.includes('delete'))
-            this.watcher.on('unlink', async ()=>{
-                await this.handleEvent()
+            this.watcher.on('unlink', async (filePath, fileinfo)=>{
+                await this.handleEvent(filePath, fileinfo)
             })
     }
 
@@ -39,11 +47,18 @@ module.exports = class Watcher {
         input = input.replace(/\\r/g, '\n')
         return input.split('\n')
     }
+    
+    /**
+     * Cleans out old log files 
+     */
+    async clean(){
 
-    async handleEvent(){
+    }
+
+    async handleEvent(filePath, fileinfo){
         // run the actual job here
         await exec.sh({ 
-            cmd : this.command, 
+            cmd : this.config.command, 
             onStdout : data => {
                 data = this.shellTextToLines(data)
                 for(const item of data)
@@ -53,11 +68,20 @@ module.exports = class Watcher {
                 console.log('ERR', data)
             },
             onStart : args => {
-                console.log(`${this.name} starting`)
+                console.log(`${this.config.name} starting`)
             },
-            onEnd : result => {
-                socket.send(this.name)
-                console.log(`${this.name} ended`)
+            onEnd : async result => {
+                socket.send('file_event', [this.config.name])
+
+                const date = new Date()
+                await fs.writeJson(path.join(this.dataPath, `${date.getTime()}.json`), {
+                    date: new Date(),
+                    file : filePath
+                }, {
+                    spaces: 4
+                })
+
+                console.log(`${this.config.name} ended`)
             }
         })        
     }

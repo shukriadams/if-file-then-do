@@ -1,8 +1,11 @@
+// set shortcut global for easier module imports. Modules are loaded relative to "server" directory
+global._$ = `${__dirname}/`
+
 const path = require('path'),
     jsonfile = require('jsonfile'),
     process = require('process'),
     minimist = require('minimist'),
-    ui = require('./lib/ui'),
+    server = require('./lib/server'),
     watchers = require('./lib/watchers'),
     argv = minimist(process.argv.slice(2))
 
@@ -12,5 +15,5 @@ if (argv.version || argv.v){
     process.exit(0)
 }
 
-ui.start()
-watchers.start();
+server.start()
+watchers.start()

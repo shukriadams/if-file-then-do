@@ -1,0 +1,25 @@
+x-main {
+    display: flex;
+    flex-flow: column;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+x-nav {
+    background-color: var(--bootstrip-color-mirage);
+    max-height: 100vh;
+    min-height: 100vh;
+    position: fixed;
+    top: 64px;
+    bottom: 0;
+    left: 0;
+    width: 176px;
+}
+
+x-content {
+    padding-left: 176px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

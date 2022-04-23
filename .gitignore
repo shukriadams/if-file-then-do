@@ -5,3 +5,14 @@ src/config.yml
 src/express/static/js/bundle.js
 build/node_modules
 build/linux64
+src/express/static/js/bootstrip.js
+src/express/static/css/bootstrip-theme-darkmoon.css
+src/express/static/css/bootstrip-theme-default.css
+src/express/static/css/bootstrip.css
+src/react/lib
+src/.tmp
+src/data
+src/express/static/js/app.js
+src/express/static/js/app.min.js
+src/react/app/config.js
+src/test

@@ -2,6 +2,12 @@
 
 Run shell commands based on file changes
 
+## Setup
+
+    npm install
+    jspm install -y
+    npm run client
+
 ## Settings
 
     port: 3000

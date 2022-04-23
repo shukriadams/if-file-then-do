@@ -2,11 +2,30 @@
     <head>
         {{{block "basehead"}}}
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/css/bootstrip.css" type="text/css">
+        <link rel="stylesheet" href="/css/bootstrip-theme-default.css" type="text/css">
+        <link rel="stylesheet" href="/css/bootstrip-theme-darkmoon.css" type="text/css">
         <link rel="stylesheet" href="/css/style.css" type="text/css">
         <title>if </title>
     </head>
     <body data-host="{{layout.host}}" data-port="{{layout.port}}" data-protocol="{{layout.protocol}}">
+        <div id="reactHook"></div>
+        
+
+    
+
         {{{block "body"}}}
-        <script src="/js/bundle.js"></script>
+        {{#if bundle}}
+            <script src="/js/app.js"></script>
+        {{else}}
+            <script src="/lib/system.js"></script>    
+            <script src="/app/config.js"></script>
+            <script>System.import('/app/main/main')</script>
+        {{/if}}
+
+        <script src="/js/bootstrip.js"></script>
     </body>
 </html>
+
+
+
