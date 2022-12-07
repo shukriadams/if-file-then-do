@@ -10,10 +10,18 @@ class View extends React.Component {
                 loaded
                 <ul>
                     {
-                        this.props.events.map((item)=>{
+                        this.props.events.map((item, index)=>{
                             return(                            
-                                <li key={item}>
-                                    {item}
+                                <li key={index}>
+                                    <div>
+                                        {index+1}
+                                    </div>
+                                    <div>
+                                        {item.date}
+                                    </div>
+                                    <div>
+                                        {item.file}
+                                    </div>
                                 </li>
                             )
                         })

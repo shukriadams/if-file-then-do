@@ -3,11 +3,16 @@ let io = null
 module.exports = {
 
     initialize(express){
-        const Socketio = require('socket.io')
+        const Socketio = require('socket.io'),
+            history = require('./history')
+
         io = Socketio(express)
-        io.on('connection', socket => {
+        io.on('connection', async socket => {
             console.log('client connected')
             socket.join('myclient')
+            // get start payload
+            const events = await history.getLatest()
+            this.send('initialize', events)
         })
     },
 

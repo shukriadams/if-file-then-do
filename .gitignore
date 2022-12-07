@@ -16,3 +16,4 @@ src/express/static/js/app.js
 src/express/static/js/app.min.js
 src/react/app/config.js
 src/test
+src/package-lock.json

@@ -9,20 +9,17 @@
         <title>if </title>
     </head>
     <body data-host="{{layout.host}}" data-port="{{layout.port}}" data-protocol="{{layout.protocol}}">
-        <div id="reactHook"></div>
+        <div id="reactHook">
+            <x-centered>
+                Loading ...
+            </x-centered>
+        </div>
         
-
-    
-
         {{{block "body"}}}
-        {{#if bundle}}
-            <script src="/js/app.js"></script>
-        {{else}}
-            <script src="/lib/system.js"></script>    
-            <script src="/app/config.js"></script>
-            <script>System.import('/app/main/main')</script>
-        {{/if}}
 
+        <script src="/lib/system.js"></script>    
+        <script src="/app/config.js"></script>
+        <script>System.import('/app/main/main')</script>
         <script src="/js/bootstrip.js"></script>
     </body>
 </html>

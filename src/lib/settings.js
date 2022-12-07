@@ -22,7 +22,13 @@ settings = Object.assign({
     host: 'localhost',
     protocol : 'http',
     dataDirectory : './data',
+    logDirectory : './data/logs',
+    // can be error|warn|info|debug in increasing levels of spamminess.
+    logLevel: 'warn',
+    internalWorkerTimer : '* * * * *',
     cacheViews: true,
+    historyLength: 20,
+    viewLength: 10,
     watch : [ ],
 }, settings)
 

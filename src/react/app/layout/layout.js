@@ -9,7 +9,7 @@ class Layout extends React.Component {
                         <a href="/">
                             <i className="icon icon-cube"></i>
                             <x-header-logo>
-                                title
+                                IFTD
                             </x-header-logo>
                         </a>
                     </x-header-logocontainer>

@@ -2,7 +2,9 @@ const chokidar = require('chokidar'),
     exec = require('madscience-node-exec'),
     settings = require('./settings'),
     fs = require('fs-extra'),
+    timebelt = require('timebelt'),
     path = require('path'),
+    cuid = require('cuid'),
     socket = require('./socket') 
 
 module.exports = class Watcher {
@@ -14,7 +16,7 @@ module.exports = class Watcher {
     }){
         this.config = config
 
-        this.dataPath = path.join(settings.dataDirectory, this.config.__safename)
+        this.dataPath = path.join(settings.dataDirectory, 'watch', this.config.__safename)
         fs.ensureDirSync(this.dataPath)
         
         this.watcher = chokidar.watch(this.config.path, options)
@@ -71,16 +73,21 @@ module.exports = class Watcher {
                 console.log(`${this.config.name} starting`)
             },
             onEnd : async result => {
-                socket.send('file_event', [this.config.name])
 
-                const date = new Date()
-                await fs.writeJson(path.join(this.dataPath, `${date.getTime()}.json`), {
-                    date: new Date(),
-                    file : filePath
-                }, {
-                    spaces: 4
-                })
+                const date = new Date(),
+                    data = {
+                        date: new Date(),
+                        name: this.config.__safename,
+                        file : filePath
+                    }
 
+                await fs.writeJson(path.join(this.dataPath, `${timebelt.toShort(date, 'd_t', 'ymd', 'hms')}_${cuid()}.json`), 
+                    data, 
+                    {
+                        spaces: 4
+                    })
+
+                socket.send('file_event', [data])
                 console.log(`${this.config.name} ended`)
             }
         })        

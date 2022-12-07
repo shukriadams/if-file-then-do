@@ -15,4 +15,8 @@ Run shell commands based on file changes
         - path: c:/
           type: new
           do:
+
+## interact
+
+Start, then point your browser to localhost:3000
              

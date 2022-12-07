@@ -23,3 +23,11 @@ x-content {
     overflow-y: auto;
     overflow-x: hidden;
 }
+
+/* this has already been moved to boostrip, can remove on next version integration */
+x-centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

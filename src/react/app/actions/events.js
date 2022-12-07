@@ -1,5 +1,7 @@
-import store from './../store/store';
-const setEvents = events => store.dispatch({ type: 'SET_EVENTS', events });
+import store from './../store/store'
+
+const setEvents = events => store.dispatch({ type: 'SET_EVENTS', events }),
+    setHistory = events => store.dispatch({ type: 'SET_HISTORY', events })
 
 let fetchEvents = async ()=>{ 
     const events = await getJsonAsync('/events')
@@ -8,5 +10,6 @@ let fetchEvents = async ()=>{
 
 export {
     setEvents,
+    setHistory,
     fetchEvents
 }

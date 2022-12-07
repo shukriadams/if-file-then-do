@@ -9,9 +9,11 @@
             "request": "attach",
             "name": "YOUR NAME",
             "port": 3001,
-            "address": "172.24.143.225",
-            "localRoot": "${workspaceFolder}",
-            "remoteRoot": "/vagrant"   
+            "address": "172.29.132.122",
+            "localRoot": "${workspaceFolder}/src",
+            "remoteRoot": "/vagrant/src",
+            "smartStep": true,
+            "skipFiles": ["<node_internals>/**", "node_modules/**"]
         }
     ]
 }

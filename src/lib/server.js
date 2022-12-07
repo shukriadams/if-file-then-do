@@ -2,6 +2,7 @@ const http = require('http'),
     Express = require('express'),
     handlebarsLoader = require('madscience-handlebarsLoader'),
     settings = require('./settings'),
+    daemon = require('./daemon'),
     socket = require('./socket')
 
 module.exports = {
@@ -24,7 +25,8 @@ module.exports = {
         // load routes
         require('./../express/routes/default')(express)
         require('./../express/routes/events')(express)
-        
+
+        daemon.start()
 
         const server = http.createServer(express)
 
