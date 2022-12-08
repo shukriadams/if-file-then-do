@@ -1,5 +1,5 @@
 import io from 'socket.io-client'
-import { setEvents, setHistory } from './../actions/events'
+import { setEvents, setHistory, setSettings } from './../actions/events'
 import settings from './../settings/settings'
 
 export default function initialize(){
@@ -10,11 +10,12 @@ export default function initialize(){
     
     socket.on('file_event', async data => {
         console.log(data)
-        setEvents(data)
+        setEvents(data.events)
     })
 
     socket.on('initialize', async data => {
         console.log(data)
-        setHistory(data)
+        setHistory(data.events)
+        setSettings(data.settings)
     })
 }

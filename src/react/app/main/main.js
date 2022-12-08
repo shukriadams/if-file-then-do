@@ -1,4 +1,5 @@
-import { View as Default } from './../default/default';
+import { View as Default } from './../default/default'
+import { View as Config } from './../config/config'
 import { View as Item } from './../item/item';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -20,6 +21,7 @@ import pubsub from './../helpers/pubsub';
                     <Switch>
                         <Layout>
                             <Route exact path="/" component={Default} />
+                            <Route exact path="/config" component={Config} />
                         </Layout>
                     </Switch>
                 </Provider>

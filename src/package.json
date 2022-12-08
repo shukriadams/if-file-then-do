@@ -22,6 +22,7 @@
     "cron": "1.7.1",
     "chokidar": "3.5.3",
     "cuid": "2.1.8",
+    "regedit": "5.1.1",
     "timebelt": "https://github.com/shukriadams/timebelt.git#0.1.10",
     "sanitize-filename": "1.6.3",
     "winston-wrapper": "https://github.com/shukriadams/winston-wrapper.git#0.1.0",
@@ -40,6 +41,7 @@
       "./package.json",
       "./express/views/**",
       "./express/static/**",
+      "./react/**",
       "./node_modules/fs-extra/**",
       "./node_modules/cuid/**",
       "./node_modules/js-yaml/**",
@@ -78,7 +80,9 @@
       "redux": "3.7.2",
       "redux-persist": "5.7.0",
       "redux-watch": "1.1.1",
-      "socket.io-client": "2.1.1"
+      "s-ago": "2.2.0",
+      "socket.io-client": "2.1.1",
+      "timebelt": "github:shukriadams/timebelt@0.1.10"
     },
     "devDependencies": {}
   }

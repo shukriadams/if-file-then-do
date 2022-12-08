@@ -2,12 +2,18 @@
 
 set -e # fail on errors
 
+target=
+upload=0
+GH_TOKEN=""
 # capture all arguments passed in (anything starting with --)
-while [ $# -gt 0 ]; do
-    if [[ $1 == *"--"* ]]; then
-        param="${1/--/}"
-        declare $param="$2"
-    fi
+while [ -n "$1" ]; do 
+    case "$1" in
+    --upload|-u) upload=1 ;;
+    --token)
+        GH_TOKEN="$2" shift;;    
+    --target|-t)
+        target="$2" shift;;
+    esac 
     shift
 done
 
@@ -16,43 +22,43 @@ if [ "$target" = "" ]; then
     exit 1;
 fi
 
-# get current revision the checkout is on
-currentRevision=$(git rev-parse --verify HEAD) 
-
 # get tag on this revision
-tag=$(git describe --contains $currentRevision)
+tag=$(git describe --abbrev=0 --tags)
 
-# ensure current revision is tagged
-if [ -z "$tag" ]; then
-    echo "ERROR : current revision has no tag on it, cannot upload";
-    exit 1;
+if [ ! $target = "dev"  ]; then
+    python3 writeVersion.py --version $TAG --path ./../src/package.json
 fi
 
 echo "{ \"version\" : \"$tag\" }" > ./../src/version.json
 
 # Call the node package pkg directly, on build servers it is not installed globally, mainly because on Windows Jenkins agents
 # global npm packages are a pain to set up, and we want to minimize changing the global state of agents.
-if [ "$target" = "linux64" ]; then
+if [ "$target" = "linux" ]; then
     
     filename=./linux64/if-file-then-do
     name="if-file-then-do_linux64"
 
-    $(npm bin)/pkg ./../src/. --targets node10-linux-x64 --output $filename
+    $(npm bin)/pkg ./../src/. --targets node12-linux-x64 --output $filename
 
     # run app and ensure exit code was 0
     (${filename} --version)
 
-elif [ "$target" = "win64" ]; then
+elif [ "$target" = "win" ]; then
     filename=./win64/if-file-then-do.exe
     name="if-file-then-do.exe"
 
-    $(npm bin)/pkg ./../src/. --targets node10-windows-x64 --output $filename
+    $(npm bin)/pkg ./../src/. --targets node12-windows-x64 --output $filename
     
     # run app and ensure exit code was 0
     ($filename --version)
+elif [ $target = "dev" ]; then
+    filename=./linux64/if-file-then-do
+    name="if-file-then-do_linux64"
+    
+    pkg ./../src/. --targets node12-linux-x64 --output $filename
 
 else
-    echo "ERROR : ${target} is not a valid --target, allowed values are [linux64|win64]"
+    echo "ERROR : ${target} is not a valid --target, allowed values are [linux|win|dev]"
     exit 1;
 fi
 
@@ -63,49 +69,29 @@ fi
 
 echo "App built"
 
+if [ ! -z $GH_TOKEN ]; then
 
-## UPLOAD -requires "--upload 1" switch
+    GH_REPO="https://api.github.com/repos/shukriadams/if-file-then-do"
+    GH_TAGS="$GH_REPO/releases/tags/$tag"
+    AUTH="Authorization: token $GH_TOKEN"
+    WGET_ARGS="--content-disposition --auth-no-challenge --no-cookie"
+    CURL_ARGS="-LJO#"
 
-if [ ! "$upload" = 1 ]; then
-    exit 0
+    # Validate token.
+    curl -o /dev/null -sH "$GH_TOKEN" $GH_REPO || { echo "Error : token validation failed";  exit 1; }
+
+    # Read asset tags.
+    response=$(curl -sH "$GH_TOKEN" $GH_TAGS)
+
+    # Get ID of the asset based on given filename.
+    eval $(echo "$response" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:alnum:]]=')
+    [ "$id" ] || { echo "Error : Failed to get release id for tag: $tag"; echo "$response" | awk 'length($0)<100' >&2; exit 1; }
+
+    # upload file to github
+    GH_ASSET="https://uploads.github.com/repos/shukriadams/if-file-then-do/releases/$id/assets?name=$(basename $name)"
+    curl --data-binary @"$filename" -H "Authorization: token $GH_TOKEN" -H "Content-Type: application/octet-stream" $GH_ASSET
+
+    echo "uploaded"
 fi
 
-# ensure required arguments
-if [ -z "$owner" ]; then
-    echo "--owner : github repo owner is required";
-    exit 1;
-fi
-
-if [ -z "$repo" ]; then
-    echo "--repo : github repo is required";
-    exit 1;
-fi
-
-if [ -z "$token" ]; then
-    echo "--token : github api token is required";
-    exit 1;
-fi
-
-
-
-GH_REPO="https://api.github.com/repos/$owner/$repo"
-GH_TAGS="$GH_REPO/releases/tags/$tag"
-AUTH="Authorization: token $token"
-WGET_ARGS="--content-disposition --auth-no-challenge --no-cookie"
-CURL_ARGS="-LJO#"
-
-# Validate token.
-curl -o /dev/null -sH "$token" $GH_REPO || { echo "Error : token validation failed";  exit 1; }
-
-# Read asset tags.
-response=$(curl -sH "$token" $GH_TAGS)
-
-# Get ID of the asset based on given filename.
-eval $(echo "$response" | grep -m 1 "id.:" | grep -w id | tr : = | tr -cd '[[:alnum:]]=')
-[ "$id" ] || { echo "Error : Failed to get release id for tag: $tag"; echo "$response" | awk 'length($0)<100' >&2; exit 1; }
-
-# upload file to github
-GH_ASSET="https://uploads.github.com/repos/$owner/$repo/releases/$id/assets?name=$(basename $name)"
-curl --data-binary @"$filename" -H "Authorization: token $token" -H "Content-Type: application/octet-stream" $GH_ASSET
-
-echo "App uploaded"
+echo "Done"

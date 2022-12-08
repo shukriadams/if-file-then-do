@@ -19,7 +19,9 @@ x-nav {
 }
 
 x-content {
-    padding-left: 176px;
+    padding: 10px;
+    padding-left: 200px;
+    padding-right: 20px;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -30,4 +32,13 @@ x-centered {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.list-row.list-row--error, .list.--striped .list-row:nth-of-type(odd).list-row--error  {
+    color: white;
+    background-color:var(--bootstrip-color-punch);
+}
+
+.list-row.list-row--error .quiet {
+    color: var(--bootstrip-color-silverSand);
 }

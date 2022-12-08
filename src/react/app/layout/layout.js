@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Link } from 'react-router-dom'
 
 class Layout extends React.Component {
     render() {
@@ -24,21 +25,17 @@ class Layout extends React.Component {
                             <li className="sideMenu-header">
                                 Options
                             </li>
-                
                             <li className="sideMenu-item ">
-                                <a className="sideMenu-anchor" href="#">
-                                    History
-                                </a>
+                                <Link className="sideMenu-anchor" to="/">History</Link>
                             </li>
+                            <li className="sideMenu-item ">
+                                <Link className="sideMenu-anchor" to="/config">Config</Link>
+                            </li>                            
                         </ul>
                     </x-nav>
                 
                     <x-content>
-                        <div className="dashboardDemo-pageGeneralContent">
-                            <div className="dashboardDemo-cards">
-                                {this.props.children}
-                            </div>
-                        </div>
+                        {this.props.children}
                     </x-content>
                 </x-main>  
             </Fragment>          

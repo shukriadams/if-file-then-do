@@ -27,17 +27,17 @@ module.exports = class Watcher {
 
         if (events.includes('add'))
             this.watcher.on('add', async (filePath, fileinfo)=>{
-                await this.handleEvent(filePath, fileinfo)
+                await this.handleEvent(filePath, fileinfo, 'add')
             })
 
         if (events.includes('edit'))
             this.watcher.on('change', async (filePath, fileinfo)=>{
-                await this.handleEvent(filePath, fileinfo)
+                await this.handleEvent(filePath, fileinfo, 'edit')
             })
 
         if (events.includes('delete'))
             this.watcher.on('unlink', async (filePath, fileinfo)=>{
-                await this.handleEvent(filePath, fileinfo)
+                await this.handleEvent(filePath, fileinfo, 'delete')
             })
     }
 
@@ -57,40 +57,67 @@ module.exports = class Watcher {
 
     }
 
-    async handleEvent(filePath, fileinfo){
+    async handleEvent(filePath, fileinfo, eventType){
+        
+        let consoleOut = '',
+            passed = false
+
         // run the actual job here
-        await exec.sh({ 
-            cmd : this.config.command, 
-            onStdout : data => {
-                data = this.shellTextToLines(data)
-                for(const item of data)
-                    console.log(item)
-            }, 
-            onStderr : data =>{
-                console.log('ERR', data)
-            },
-            onStart : args => {
-                console.log(`${this.config.name} starting`)
-            },
-            onEnd : async result => {
-
-                const date = new Date(),
-                    data = {
-                        date: new Date(),
-                        name: this.config.__safename,
-                        file : filePath
+        try  {
+            await exec.sh({ 
+                cmd : this.config.command, 
+                onStdout : data => {
+                    data = this.shellTextToLines(data)
+                    for(const item of data){
+                        consoleOut += item
+                        console.log(item)
                     }
+                }, 
+                onStderr : data =>{
+                    console.log('ERR', data)
+                    consoleOut += data
+                },
+                onStart : args => {
+                    console.log(`${this.config.name} starting`)
+                },
 
-                await fs.writeJson(path.join(this.dataPath, `${timebelt.toShort(date, 'd_t', 'ymd', 'hms')}_${cuid()}.json`), 
-                    data, 
-                    {
-                        spaces: 4
-                    })
+                /**
+                 * Result is {
+                 *    code: int,
+                 *    passed: bool,
+                 *    result: string
+                 * }
+                 */
+                onEnd : async result => {
+                    passed = result.passed
+                    consoleOut += `Exited with code: ${result.code}. ${result.result}` 
+                    this.afterEvent(filePath, consoleOut, passed, eventType)
+                }
+            })     
+        } catch (ex){
+            consoleOut += JSON.stringify(ex)
+        }
+    }
 
-                socket.send('file_event', [data])
-                console.log(`${this.config.name} ended`)
+    async afterEvent(filePath, consoleOut, passed, eventType){
+        const date = new Date(),
+            data = {
+                date: new Date(),
+                name: this.config.__safename,
+                file : filePath,
+                result : consoleOut,
+                eventType,
+                passed
             }
-        })        
+
+        await fs.writeJson(path.join(this.dataPath, `${timebelt.toShort(date, 'd_t', 'ymd', 'hms')}_${cuid()}.json`), 
+            data, 
+            {
+                spaces: 4
+            })
+
+        socket.send('file_event', { events : [data] })
+        console.log(`${this.config.name} ended`)
     }
 
 }
