@@ -29,8 +29,6 @@ if [ ! $target = "dev"  ]; then
     python3 writeVersion.py --version $TAG --path ./../src/package.json
 fi
 
-echo "{ \"version\" : \"$tag\" }" > ./../src/version.json
-
 # Call the node package pkg directly, on build servers it is not installed globally, mainly because on Windows Jenkins agents
 # global npm packages are a pain to set up, and we want to minimize changing the global state of agents.
 if [ "$target" = "linux" ]; then

@@ -19,9 +19,9 @@
     if (argv.autostart){
         const regedit = require('regedit').promisified
 
-        if (process.platform === 'win32'){
+        if (process.platform !== 'win32'){
             console.error('Install app as a service is supported on Windows only')
-            return process(1)
+            return process.exit(0)
         }
 
         await regedit.putValue({
