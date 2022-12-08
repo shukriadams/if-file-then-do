@@ -2,23 +2,18 @@
 
 set -e # fail on errors
 
-target=
-upload=0
-GH_TOKEN=""
 # capture all arguments passed in (anything starting with --)
-while [ -n "$1" ]; do 
-    case "$1" in
-    --upload|-u) upload=1 ;;
-    --token)
-        GH_TOKEN="$2" shift;;    
-    --target|-t)
-        target="$2" shift;;
-    esac 
+# Note - do not refactor this to sh parameterized capture, that doesn't work on windows
+while [ $# -gt 0 ]; do
+    if [[ $1 == *"--"* ]]; then
+        param="${1/--/}"
+        declare $param="$2"
+    fi
     shift
 done
 
 if [ "$target" = "" ]; then
-    echo "ERROR : --target not set, egs, --target win64"
+    echo "ERROR : --target not set, egs, --target win"
     exit 1;
 fi
 
@@ -26,7 +21,8 @@ fi
 tag=$(git describe --abbrev=0 --tags)
 
 if [ ! $target = "dev"  ]; then
-    python3 writeVersion.py --version $TAG --path ./../src/package.json
+    # py guaranteed to work on windows by bypassing execution alias
+    py writeVersion.py --version $tag --path ./../src/package.json
 fi
 
 # Call the node package pkg directly, on build servers it is not installed globally, mainly because on Windows Jenkins agents
